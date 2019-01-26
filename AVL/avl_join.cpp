@@ -1,3 +1,10 @@
+/**
+ * Merging AVL trees
+ * 
+ * @author Praveen Gupta
+ * @author Dibyadarshan Hota
+ */
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -160,6 +167,48 @@ int find_large(struct node *root) {
     return find_large(root->right);
 }
 
+int find_small(struct node *root) {
+    if(root->left == NULL) {
+        return root->value;
+    }
+    return find_small(root->left);
+}
+
+int insert_value, flag = 0;
+
+struct node *mergeSmall (struct node *root_1, struct node *root_2) {
+    if((height(root_2->left) == height(root_1)+1) || height(root_2->left) == height(root_1)) {
+        // cout << root_2->value << "<---";
+        struct node *temp = new_node(insert_value);
+        temp->right = root_2->left;
+        temp->left = root_1;
+        root_2->left = temp; 
+        temp->height = 1 + max(height(temp->left), height(temp->right));
+    }
+    else {
+        // cout << root_2->value << "<--";
+        root_2->left = mergeSmall(root_1, root_2->left);
+    }
+    // cout << root_2->value << "<-";
+    root_2->height = 1 + max(height(root_2->left), height(root_2->right));
+
+    int balance = getBalance(root_2); 
+  
+    if(flag == 0) {
+        if(balance > 1) {
+            flag = 1;
+            root_2->left =  leftRotate(root_2->left); 
+            return rightRotate(root_2);
+        }
+    }
+    else {
+        if(balance > 1) {
+            return rightRotate(root_2);
+        }
+    }
+    return root_2;
+}
+
 int main () {
     // Small tree
     struct node *root_1 = NULL;
@@ -187,16 +236,42 @@ int main () {
     // ---------- merging ----------
     // Heights
     cout << "Small height, large height: " << height(root_1) << ", " << height(root_2) << "\n";
-    // Case equal heights
-    if(height(root_1) == height(root_2)) {
+    // Case equal heights or root_1 + 1 == root_2
+    if(height(root_1) == height(root_2) || (height(root_1)+1 == height(root_2))) {
         // Make max(root_1) as root and join the other 2 trees
+        cout<<"\nCase 1\n";
         int left_large = find_large(root_1);
         root_1 = deleteNode(root_1, left_large);
         root_3 = new_node(left_large);
         root_3->left = root_1;
         root_3->right = root_2;
+        root_3->height= 1 + max(height(root_3->left), height(root_3->right));
     }
-
+    // Case root_2 + 1 == root_1
+    else if(height(root_1) == height(root_2)+1) {
+        // Make min(root_2) as root and join the other 2 trees
+        cout<<"\nCase 2\n";
+        int right_small = find_small(root_2);
+        root_2 = deleteNode(root_2, right_small);
+        root_3 = new_node(right_small);
+        root_3->left = root_1;
+        root_3->right = root_2;
+        root_3->height= 1 + max(height(root_3->left), height(root_3->right));
+    }
+    // Case root_1 is smaller
+    else if (height(root_1) < height(root_2)) {
+        // Delete max(root_1)
+        cout<<"\nCase 3\n";
+        insert_value = find_large(root_1);
+        root_1 = deleteNode(root_1, insert_value);
+        root_2 = mergeSmall(root_1, root_2);
+        root_3 = root_2;
+    }
+    // Case root_2 is smaller
+    else {
+        // Delete min(root_2)
+        cout<<"\nCase 4\n";
+    }
     display(root_3);
     return 0;
 }
