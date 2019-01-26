@@ -209,6 +209,39 @@ struct node *mergeSmall (struct node *root_1, struct node *root_2) {
     return root_2;
 }
 
+struct node *mergeLarge (struct node *root_1, struct node *root_2) {
+    if((height(root_1->right) == height(root_2)+1) || height(root_1->right) == height(root_2)) {
+        // cout << root_2->value << "<---";
+        struct node *temp = new_node(insert_value);
+        temp->right = root_2;
+        temp->left = root_1->right;
+        root_1->right = temp; 
+        temp->height = 1 + max(height(temp->left), height(temp->right));
+    }
+    else {
+        // cout << root_2->value << "<--";
+        root_1->right = mergeSmall(root_1->right, root_2);
+    }
+    // cout << root_2->value << "<-";
+    root_1->height = 1 + max(height(root_1->left), height(root_1->right));
+
+    int balance = getBalance(root_1); 
+  
+    if(flag == 0) {
+        if(balance < 1) {
+            flag = 1;
+            root_1->right =  rightRotate(root_1->right); 
+            return leftRotate(root_1);
+        }
+    }
+    else {
+        if(balance < 1) {
+            return leftRotate(root_1);
+        }
+    }
+    return root_1;
+}
+
 int main () {
     // Small tree
     struct node *root_1 = NULL;
@@ -237,7 +270,7 @@ int main () {
     // Heights
     cout << "Small height, large height: " << height(root_1) << ", " << height(root_2) << "\n";
     // Case equal heights or root_1 + 1 == root_2
-    if(height(root_1) == height(root_2) || (height(root_1)+1 == height(root_2))) {
+    if(height(root_1) == height(root_2) || (height(root_1) == height(root_2)+1)) {
         // Make max(root_1) as root and join the other 2 trees
         cout<<"\nCase 1\n";
         int left_large = find_large(root_1);
@@ -248,7 +281,7 @@ int main () {
         root_3->height= 1 + max(height(root_3->left), height(root_3->right));
     }
     // Case root_2 + 1 == root_1
-    else if(height(root_1) == height(root_2)+1) {
+    else if(height(root_1)+1 == height(root_2)) {
         // Make min(root_2) as root and join the other 2 trees
         cout<<"\nCase 2\n";
         int right_small = find_small(root_2);
@@ -271,6 +304,10 @@ int main () {
     else {
         // Delete min(root_2)
         cout<<"\nCase 4\n";
+        insert_value = find_small(root_2);
+        root_2 = deleteNode(root_2, insert_value);
+        root_1 = mergeLarge(root_1, root_2);
+        root_3 = root_1;
     }
     display(root_3);
     return 0;

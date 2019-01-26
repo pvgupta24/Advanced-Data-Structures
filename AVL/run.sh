@@ -1,2 +1,2 @@
-g++ $1
-./a.out < test
+g++ avl_join.cpp
+./a.out < $1
