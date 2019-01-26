@@ -153,20 +153,50 @@ struct node *deleteNode (struct node *root, int key) {
     return root; 
 } 
 
+int find_large(struct node *root) {
+    if(root->right == NULL) {
+        return root->value;
+    }
+    return find_large(root->right);
+}
+
 int main () {
+    // Small tree
     struct node *root_1 = NULL;
+    // Large tree
     struct node *root_2 = NULL;
+    // Final tree
+    struct node *root_3 = NULL;
     int n, m;
-    cin >> n;
+    // cout << "Number of nodes in small tree, nodes in big tree: \n";
+    cin >> n >> m;
+    // cout << "Nodes in small tree, nodes in big tree: \n";
     int a1, insert_val;
     for( a1 = 0 ; a1 < n ; ++a1 ) {
         cin >> insert_val;
         root_1 = insert(root_1, insert_val);
     }
     display(root_1); cout << "\n";
-    root_1 = deleteNode(root_1, 3);
-    display(root_1); cout << "\n";
-    root_1 = insert(root_1, 12);
-    display(root_1);
+
+    for( a1 = 0 ; a1 < m ; ++a1 ) {
+        cin >> insert_val;
+        root_2 = insert(root_2, insert_val);
+    }
+    display(root_2); cout << "\n";
+
+    // ---------- merging ----------
+    // Heights
+    cout << "Small height, large height: " << height(root_1) << ", " << height(root_2) << "\n";
+    // Case equal heights
+    if(height(root_1) == height(root_2)) {
+        // Make max(root_1) as root and join the other 2 trees
+        int left_large = find_large(root_1);
+        root_1 = deleteNode(root_1, left_large);
+        root_3 = new_node(left_large);
+        root_3->left = root_1;
+        root_3->right = root_2;
+    }
+
+    display(root_3);
     return 0;
 }
