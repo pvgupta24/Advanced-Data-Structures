@@ -355,7 +355,7 @@ struct node *merge (struct node *x, struct node *y) {
         root_3 = root_1;
     }
     // display(root_3);
-    // check(root_3);
+    check(root_3);
     // cout << "\n";
     
     return root_3;
@@ -365,8 +365,8 @@ void checkSplit(struct node *root, int left, int k){
     if(root==NULL) return;
     if(left) {
         if(root->value > k) {
-            for(int i = 0; i < 100 ; ++i) {
-                cout << "\n------ERROR-----\n";
+            for(int i = 0; i < 1 ; ++i) {
+                cout << "\n------ERROR 1-----\n" << root->value << "\n";
             }   
             return;
         }
@@ -377,8 +377,8 @@ void checkSplit(struct node *root, int left, int k){
     }
     else{
         if(root->value < k) {
-            for(int i = 0; i < 100 ; ++i) {
-                cout << "\n------ERROR-----\n";
+            for(int i = 0; i < 1 ; ++i) {
+                cout << "\n------ERROR 2-----\n" << root->value << "\n";
             }   
             return;
         }
@@ -423,6 +423,7 @@ int main () {
     int n, k;
     // cout << "Number of nodes and split value: \n";
     cin >> n >> k;
+    cout << n << " " << k << "\n";
     // cout << "Nodes: \n";
     int a1, insert_val;
     for( a1 = 0 ; a1 < n ; ++a1 ) {
@@ -434,7 +435,7 @@ int main () {
     root = split(root, k);
     display(root->left); cout << "\n";
     display(root->right); cout << "\n";
-    // checkSplit(root, 1, k);
-    // checkSplit(root, 0, k);
+    checkSplit(root->left, 1, k);
+    checkSplit(root->right, 0, k);
     return 0;
 }
