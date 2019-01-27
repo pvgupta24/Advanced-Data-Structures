@@ -1,2 +1,2 @@
 g++ avl_split.cpp
-./a.out < $1
+./a.out < test

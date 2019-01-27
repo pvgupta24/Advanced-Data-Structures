@@ -281,7 +281,7 @@ struct node *mergeLarge (struct node *root_1, struct node *root_2) {
 void check (struct node *root) {
     if(root == NULL) return;
     if(abs(height(root->left)-height(root->right)) > 1) {
-        for(int i = 0; i < 3 ; ++i) {
+        for(int i = 0; i < 100 ; ++i) {
             cout << "\n------ERROR-----\n";
         }
         cout << root->value;

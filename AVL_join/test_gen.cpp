@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#define mx 10000
+#define mx 1000000
 using namespace std;
 
 int main () {
