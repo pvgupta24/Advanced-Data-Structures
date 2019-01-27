@@ -194,24 +194,42 @@ struct node *mergeSmall (struct node *root_1, struct node *root_2) {
 
     int balance = getBalance(root_2); 
   
-    if(flag == 0) {
-        if(balance > 1) {
-            flag = 1;
-            root_2->left =  leftRotate(root_2->left); 
-            return rightRotate(root_2);
-        }
+    // if(flag == 0) {
+    //     if(balance > 1) {
+    //         flag = 1;
+    //         root_2->left =  leftRotate(root_2->left); 
+    //         return rightRotate(root_2);
+    //     }
+    // }
+    // else {
+    //     if(balance > 1) {
+    //         return rightRotate(root_2);
+    //     }
+    // }
+
+    if (balance > 1 && height(root_2->left->left)>height(root_2->left->right)) {
+        return rightRotate(root_2); 
     }
-    else {
-        if(balance > 1) {
-            return rightRotate(root_2);
-        }
-    }
+        
+    if (balance < -1 && height(root_2->right->left)<height(root_2->right->right)) {
+        return leftRotate(root_2); 
+    } 
+        
+    if (balance > 1 && height(root_2->left->left)<height(root_2->left->right)) { 
+        root_2->left =  leftRotate(root_2->left); 
+        return rightRotate(root_2); 
+    } 
+  
+    if (balance < -1 && height(root_2->right->left)>height(root_2->right->right)) { 
+        root_2->right = rightRotate(root_2->right); 
+        return leftRotate(root_2); 
+    } 
     return root_2;
 }
 
 struct node *mergeLarge (struct node *root_1, struct node *root_2) {
     if((height(root_1->right) == height(root_2)+1) || height(root_1->right) == height(root_2)) {
-        // cout << root_2->value << "<---";
+        // cout << root_1->value << "<---";
         struct node *temp = new_node(insert_value);
         temp->right = root_2;
         temp->left = root_1->right;
@@ -219,27 +237,58 @@ struct node *mergeLarge (struct node *root_1, struct node *root_2) {
         temp->height = 1 + max(height(temp->left), height(temp->right));
     }
     else {
-        // cout << root_2->value << "<--";
-        root_1->right = mergeSmall(root_1->right, root_2);
+        // cout << root_1->value << "<--";
+        root_1->right = mergeLarge(root_1->right, root_2);
     }
-    // cout << root_2->value << "<-";
+    // cout << root_1->value << "<-";
     root_1->height = 1 + max(height(root_1->left), height(root_1->right));
 
     int balance = getBalance(root_1); 
   
-    if(flag == 0) {
-        if(balance < 1) {
-            flag = 1;
-            root_1->right =  rightRotate(root_1->right); 
-            return leftRotate(root_1);
-        }
+    // if(flag == 0) {
+    //     if(balance < 1) {
+    //         flag = 1;
+    //         root_1->right =  rightRotate(root_1->right); 
+    //         return leftRotate(root_1);
+    //     }
+    // }
+    // else {
+    //     if(balance < 1) {
+    //         return leftRotate(root_1);
+    //     }
+    // }
+    if (balance > 1 && height(root_1->left->left)>height(root_1->left->right)) {
+        return rightRotate(root_1); 
     }
-    else {
-        if(balance < 1) {
-            return leftRotate(root_1);
-        }
-    }
+        
+    if (balance < -1 && height(root_1->right->left)<height(root_1->right->right)) {
+        return leftRotate(root_1); 
+    } 
+        
+    if (balance > 1 && height(root_1->left->left)<height(root_1->left->right)) { 
+        root_1->left =  leftRotate(root_1->left); 
+        return rightRotate(root_1); 
+    } 
+  
+    if (balance < -1 && height(root_1->right->left)>height(root_1->right->right)) { 
+        root_1->right = rightRotate(root_1->right); 
+        return leftRotate(root_1); 
+    } 
+
     return root_1;
+}
+
+void check (struct node *root) {
+    if(root == NULL) return;
+    if(abs(height(root->left)-height(root->right)) > 1) {
+        for(int i = 0; i < 3 ; ++i) {
+            cout << "\n------ERROR-----\n";
+        }
+        cout << root->value;
+        return;
+    }
+    check(root->right);
+    check(root->left);
 }
 
 int main () {
@@ -310,5 +359,7 @@ int main () {
         root_3 = root_1;
     }
     display(root_3);
+    check(root_3);
+    cout << "\n";
     return 0;
 }
