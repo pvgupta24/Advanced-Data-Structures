@@ -4,11 +4,13 @@
 
 using namespace std;
 
+RedBlackTreeNode *RedBlackTree::nil = new RedBlackTreeNode(INT_MIN, nullptr, nullptr, nullptr);
+
 /**
  * Initializes root node and nil node
  */ 
 void RedBlackTree::initialize(){
-    this->nil = new RedBlackTreeNode(INT_MIN, nullptr, nullptr, nullptr);
+    // this->nil = new RedBlackTreeNode(INT_MIN, nullptr, nullptr, nullptr);
     (this->nil)->left = (this->nil)->right = (this->nil)->parent = this->nil;
     
     // this->root = new RedBlackTreeNode(INT_MIN, nullptr, nullptr, nullptr);
@@ -23,7 +25,8 @@ void RedBlackTree::left_rotate(RedBlackTreeNode *x){
 
     if(y->left != this->nil)
         y->left->parent = x;
-    
+
+    y->parent = x->parent;
     if(x->parent == this->nil)
         this->root = y;
     else if(x == x->parent->left)
@@ -35,22 +38,23 @@ void RedBlackTree::left_rotate(RedBlackTreeNode *x){
     x->parent = y;
 }
 
-void RedBlackTree::right_rotate(RedBlackTreeNode *y){
-    RedBlackTreeNode *x = y->left;
-    y->left = x->right;
+void RedBlackTree::right_rotate(RedBlackTreeNode *x){
+    RedBlackTreeNode *y = x->left;
+    x->left = y->right;
 
-    if(x->right != this->nil)
-        x->right->parent = y;
+    if(y->right != this->nil)
+        y->right->parent = x;
     
-    if(y->parent == this->nil)
-        this->root = x;
-    else if(y == y->parent->right)
-        y->parent->right = x;
+    y->parent = x->parent;    
+    if(x->parent == this->nil)
+        this->root = y;
+    else if(x == x->parent->right)
+        x->parent->right = y;
     else
-        y->parent->left = x;
+        x->parent->left = y;
 
-    x->right = y;
-    y->parent = x;
+    y->right = x;
+    x->parent = y;
 }
 
 void RedBlackTree::insert(RedBlackTreeNode *z){
@@ -156,6 +160,8 @@ void RedBlackTree::remove(RedBlackTreeNode *z){
         y->colour = z->colour;
     }
 
+    delete z;
+
     if(y_original_colour == BLACK){
         this->remove_fixup(x);
     }
@@ -179,6 +185,15 @@ RedBlackTreeNode *RedBlackTree::tree_minimum(RedBlackTreeNode *x)
 {
     while (x->left != this->nil){
         x = x->left;
+    }
+
+    return x;
+}
+
+RedBlackTreeNode *RedBlackTree::tree_maximum(RedBlackTreeNode *x)
+{
+    while (x->right != this->nil){
+        x = x->right;
     }
 
     return x;
@@ -279,4 +294,64 @@ void RedBlackTree::preorder(RedBlackTreeNode *node){
 void RedBlackTree::print_tree(){
     this->preorder(this->root);
     cout << endl;
+}
+
+int RedBlackTree::get_black_height(){
+    RedBlackTreeNode *x = this->root;
+    int black_height = 0;
+
+    while(x!=this->nil){
+        if(x->colour == BLACK)
+            black_height++;
+        
+        x = x->right;
+    }
+
+    return black_height;
+}
+
+void RedBlackTree::insert_colour(RedBlackTreeNode *newNode) {
+    RedBlackTreeNode *y;
+    RedBlackTreeNode *x;
+
+    x = newNode;
+    x->colour = RED;
+    while (x->parent->colour == RED) {
+        if (x->parent == x->parent->parent->left) {
+            y = x->parent->parent->right;
+            if (y->colour == RED) {
+                x->parent->colour = BLACK;
+                y->colour = BLACK;
+                x->parent->parent->colour = RED;
+                x = x->parent->parent;
+            } else {
+                if (x == x->parent->right) {
+                x = x->parent;
+                this->left_rotate(x);
+                }
+                x->parent->colour = BLACK;
+                x->parent->parent->colour = RED;
+                this->right_rotate(x->parent->parent);
+            }
+        } else {
+            y = x->parent->parent->left;
+            if (y->colour == RED) {
+                x->parent->colour = BLACK;
+                y->colour = BLACK;
+                x->parent->parent->colour = RED;
+                x = x->parent->parent;
+            } else {
+                if (x == x->parent->left) {
+                x = x->parent;
+                this->right_rotate(x);
+                }
+                x->parent->colour = BLACK;
+                x->parent->parent->colour = RED;
+                this->left_rotate(x->parent->parent);
+            }
+        }
+    }
+    root->left->colour = BLACK;
+
+    return;
 }

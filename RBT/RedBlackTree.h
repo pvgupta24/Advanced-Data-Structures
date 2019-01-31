@@ -47,15 +47,34 @@ public:
     }
 };
 
+/**
+ * 
+1) Every node has a color either red or black.
+2) Root of tree is always black.
+3) There are no two adjacent red nodes (A red node cannot have a red parent or red child).
+4) Every path from a node (including root) to any of its descendant NULL node has the same
+    number of black nodes.
+
+**/
 // TODO: template<typename Key, typename Value>
 class RedBlackTree
 {
-    RedBlackTreeNode *root, *nil, *anchor;
+    RedBlackTreeNode *root;
+    static RedBlackTreeNode *nil;
 
 public:
     RedBlackTree(){
         initialize();
     }
+
+    RedBlackTreeNode *GetRoot(){
+        return this->root;
+    }
+    
+    RedBlackTreeNode *GetNil(){
+        return this->nil;
+    }
+
     void initialize();
 
     void insert(RedBlackTreeNode *z);
@@ -70,6 +89,9 @@ public:
     void transplant(RedBlackTreeNode *u, RedBlackTreeNode *v);
     void remove_fixup(RedBlackTreeNode *z);
     RedBlackTreeNode *tree_minimum(RedBlackTreeNode *z);
+    RedBlackTreeNode *tree_maximum(RedBlackTreeNode *z);
     void print_tree();
     void preorder(RedBlackTreeNode *node);
+    int get_black_height();
+    void insert_colour(RedBlackTreeNode *newNode);
 };
