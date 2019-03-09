@@ -428,6 +428,7 @@ int main () {
     int a1, insert_val;
     for( a1 = 0 ; a1 < n ; ++a1 ) {
         cin >> insert_val;
+        if(insert_val == k) continue;
         root = insert(root, insert_val);
     }
 
