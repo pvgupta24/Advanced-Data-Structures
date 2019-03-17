@@ -3,8 +3,11 @@
 
 using namespace std;
 
-#define BINARY_HEAP 0
-#define FIBONNACI_HEAP 1
+enum {
+    BINARY_HEAP,
+    FIBONACCI_HEAP,
+    BINOMINAL_HEAP
+};
 
 // Heap to be used for the priority queue
 #define HEAP_TYPE BINARY_HEAP

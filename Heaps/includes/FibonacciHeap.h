@@ -6,6 +6,7 @@
 struct Node {
     pair<int, int> data;
     int degree;
+    bool marked;
     Node *child, *sibling, *parent;
 
     explicit Node(pair<int, int>);
@@ -19,8 +20,7 @@ class FibonacciHeap: public Heap
         pair<int,int> pop();
         void push(pair<int,int>);
         int getOps();
-        void printTree(Node* h);
-        void printHeap();
+        bool decreaseKey(pair<int,int> value, pair<int,int> newKey);
     protected:
         pait<int,int> extractMin();
         void insertAtTreeInHeap(Node *tree);
@@ -30,6 +30,7 @@ class FibonacciHeap: public Heap
         void adjust();
         void insert(pair<int,int> key);
         Node* getMin();
+        void cut(Node* node);
     private:
         int ops;
         list<Node*> heap;
