@@ -2,7 +2,7 @@
 #define _HEAPS
 
 #define MAX_NODE_COUNT 1000000
-#define INF INT_MAX
+#define INF 99999
 
 template <class T>
 struct Node

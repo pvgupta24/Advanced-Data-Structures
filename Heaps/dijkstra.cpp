@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "includes/BinaryHeap.h"
+#include "includes/FibonacciHeap.h"
 
 using namespace std;
 
@@ -14,9 +15,9 @@ enum {
 
 const string heap_name[] = {"Binary Heap ", "Fibonnaci Heap "};
 
-vector<int> shortestReach(int n, vector<vector<int>> edges, int s)
+vector<int> shortestReach(int n, vector<vector<int> > edges, int s)
 {
-    vector<set<pair<int, int>>> g(n + 1);
+    vector<set<pair<int, int> > > g(n + 1);
     int test1 = edges.size();
     int u, v, w;
     for (int i = 0; i < test1; i++)
@@ -34,6 +35,9 @@ vector<int> shortestReach(int n, vector<vector<int>> edges, int s)
     {
         case BINARY_HEAP:
             priority_queue = new BinaryHeap<pair<int, int>>();
+            break;
+        case FIBONACCI_HEAP:
+            priority_queue = new FibonacciHeap<pair<int, int>>();
             break;
     }
 
@@ -72,6 +76,8 @@ vector<int> shortestReach(int n, vector<vector<int>> edges, int s)
             ans.push_back(darr[i]);
         else if (i != s)
             ans.push_back(-1);
+        else
+            ans.push_back(0);
     }
     return ans;
 }

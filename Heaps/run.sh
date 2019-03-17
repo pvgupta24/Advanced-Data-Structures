@@ -9,7 +9,7 @@ if [ -d "$DIRECTORY" ]; then
 fi
 mkdir "$DIRECTORY"
 
-g++ -g -Wall -o dijkstra dijkstra.cpp
+g++ -g -Wall -o  dijkstra  -std=c++11 dijkstra.cpp
 
 for testcase in $(ls testcases); do
     OUTPUT="$DIRECTORY$testcase.temp"
