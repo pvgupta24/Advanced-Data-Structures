@@ -15,12 +15,13 @@ enum {
 
 const string heap_name[] = {"Binary Heap ", "Fibonnaci Heap "};
 
-vector<int> shortestReach(int n, vector<vector<int> > edges, int s)
+vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
 {
     vector<set<pair<int, int> > > g(n + 1);
-    int test1 = edges.size();
     int u, v, w;
-    for (int i = 0; i < test1; i++)
+
+    // Makes adjacency matrix with 1 based indexing
+    for (int i = 0; i < e; i++)
     {
         u = edges[i][0];
         v = edges[i][1];
@@ -39,6 +40,9 @@ vector<int> shortestReach(int n, vector<vector<int> > edges, int s)
         case FIBONACCI_HEAP:
             priority_queue = new FibonacciHeap<pair<int, int>>();
             break;
+        default:
+            cout << "Select heap first" << endl;
+            exit(0);
     }
 
     for (int i = 1; i <= n; i++)
@@ -102,7 +106,7 @@ int main()
     cin >> s;
 
     clock_t begin = clock();
-    vector<int> result = shortestReach(vertex_count, edges, s);
+    vector<int> result = shortestReach(vertex_count, edge_count, edges, s);
     clock_t end = clock();
 
     cout << "Time Taken with " << heap_name[HEAP_TYPE] << 1.0 * (end - begin) / CLOCKS_PER_SEC << "seconds" << endl;
