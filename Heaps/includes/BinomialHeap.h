@@ -5,12 +5,6 @@
 #include <list>
 using namespace std;
 
-/*
-    virtual void insert(T value) = 0;
-    virtual T get_min() = 0;
-    virtual T extract_min() = 0;
-*/
-
 template <class T>
 class BinomialHeap : public virtual Heap<T>
 {
