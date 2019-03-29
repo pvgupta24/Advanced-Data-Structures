@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<pair<int,int> > adj[1000000];
+vector<pair<int,int> > adj[10000005];
 int main(){
     srand(time(NULL));
     int n,e,a1,a2,r1,r2,wt;

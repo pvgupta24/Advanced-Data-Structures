@@ -13,8 +13,8 @@ enum {
 
 // Heap to be used for the priority queue
 // #define HEAP_TYPE BINARY_HEAP
-#define HEAP_TYPE FIBONACCI_HEAP
-// #define HEAP_TYPE BINOMIAL_HEAP
+// #define HEAP_TYPE FIBONACCI_HEAP
+#define HEAP_TYPE BINOMIAL_HEAP
 
 const string heap_name[] = {"Binary Heap ", "Fibonnaci Heap ", "Binomial Heap"};
 
@@ -62,6 +62,7 @@ vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
     priority_queue->insert({0, s});
     ++insert_ops;
     int count = 0;
+    clock_t begin = clock();
     while (count<n)
     {
         int u = priority_queue->get_min().second;
@@ -86,6 +87,8 @@ vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
             }
         }
     }
+    clock_t end = clock();
+    cout << "Time Taken with " << heap_name[HEAP_TYPE] << " " << 1.0 * (end - begin) / CLOCKS_PER_SEC << " seconds" << endl;
     vector<int> ans;
     for (int i = 1; i <= n; ++i)
     {
@@ -124,12 +127,9 @@ int main()
     int s;
     cin >> s;
 
-    clock_t begin = clock();
     vector<int> result = shortestReach(vertex_count, edge_count, edges, s);
-    clock_t end = clock();
-
-    cout << "Time Taken with " << heap_name[HEAP_TYPE] << " " << 1.0 * (end - begin) / CLOCKS_PER_SEC << " seconds" << endl;
-
+    
+    
     cout << "Insert operations: " << insert_ops << endl << "Extract minimum operations: " << extract_min_ops << endl;
 
     for (uint i = 0; i < result.size(); i++)
