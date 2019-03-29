@@ -12,7 +12,9 @@ enum {
 };
 
 // Heap to be used for the priority queue
+// #define HEAP_TYPE BINARY_HEAP
 #define HEAP_TYPE FIBONACCI_HEAP
+// #define HEAP_TYPE BINOMIAL_HEAP
 
 const string heap_name[] = {"Binary Heap ", "Fibonnaci Heap ", "Binomial Heap"};
 
@@ -77,7 +79,7 @@ vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
             if (darr[v] > darr[u] + weight)
             {
                 // Updating distance of v
-                int tmp = darr[v];
+                // int tmp = darr[v];
                 darr[v] = darr[u] + weight;
                 ++insert_ops;
                 priority_queue->insert({darr[v], v});

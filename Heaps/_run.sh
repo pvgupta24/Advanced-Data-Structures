@@ -9,7 +9,10 @@ if [ -z $1 ]; then
 fi
 
 echo "Compiling ..."
-g++ -g -Wall -o dijkstra dijkstra.cpp
+g++ -g -o dijkstra dijkstra.cpp
+# g++ -g -Wall -o dijkstra dijkstra.cpp
+
+echo "Compiled"
 
 if [ -z $2 ]; then
     ./dijkstra < $1
