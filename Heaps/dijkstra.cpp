@@ -1,19 +1,22 @@
 #include <bits/stdc++.h>
 #include "includes/BinaryHeap.h"
 #include "includes/FibonacciHeap.h"
+#include "includes/BinomialHeap.h"
 
 using namespace std;
 
 enum {
     BINARY_HEAP,
     FIBONACCI_HEAP,
-    BINOMINAL_HEAP
+    BINOMIAL_HEAP
 };
 
 // Heap to be used for the priority queue
-#define HEAP_TYPE BINARY_HEAP
+#define HEAP_TYPE FIBONACCI_HEAP
 
-const string heap_name[] = {"Binary Heap ", "Fibonnaci Heap "};
+const string heap_name[] = {"Binary Heap ", "Fibonnaci Heap ", "Binomial Heap"};
+
+int insert_ops = 0, extract_min_ops = 0;
 
 vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
 {
@@ -40,27 +43,34 @@ vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
         case FIBONACCI_HEAP:
             priority_queue = new FibonacciHeap<pair<int, int>>();
             break;
-        default:
-            cout << "Select heap first" << endl;
-            exit(0);
+        case BINOMIAL_HEAP:
+            priority_queue = new BinomialHeap<pair<int, int>>();
+            break;
     }
 
     for (int i = 1; i <= n; i++)
     {
         priority_queue->insert({INF, i});
+        ++insert_ops;
     }
 
     vector<int> darr(n + 1, INF);
     darr[s] = 0; // source vertex dist is zero
-    priority_queue->decrease_key({INF, s}, {0, s});
-
-    while (priority_queue->getNodeCount())
+    vector<bool> visited(n + 1, false);
+    priority_queue->insert({0, s});
+    ++insert_ops;
+    int count = 0;
+    while (count<n)
     {
         int u = priority_queue->get_min().second;
         priority_queue->extract_min();
-
+        ++extract_min_ops;
+        if(visited[u]) continue;
+        visited[u] = true;
+        ++count;
         for (auto x : g[u])
         {
+            if(visited[x.first]) continue;
             int v = x.first;
             int weight = x.second;
 
@@ -69,7 +79,8 @@ vector<int> shortestReach(int n, int e, vector<vector<int> > &edges, int s)
                 // Updating distance of v
                 int tmp = darr[v];
                 darr[v] = darr[u] + weight;
-                priority_queue->decrease_key({tmp, v}, {darr[v], v});
+                ++insert_ops;
+                priority_queue->insert({darr[v], v});
             }
         }
     }
@@ -100,6 +111,12 @@ int main()
         {
             cin >> edges[i][j];
         }
+        
+        if(edges[i][2] < 0) 
+        {
+            cout << "\nERROR: Negative edge\n";
+            return 0;
+        }
     }
 
     int s;
@@ -109,19 +126,35 @@ int main()
     vector<int> result = shortestReach(vertex_count, edge_count, edges, s);
     clock_t end = clock();
 
-    cout << "Time Taken with " << heap_name[HEAP_TYPE] << 1.0 * (end - begin) / CLOCKS_PER_SEC << "seconds" << endl;
+    cout << "Time Taken with " << heap_name[HEAP_TYPE] << " " << 1.0 * (end - begin) / CLOCKS_PER_SEC << " seconds" << endl;
+
+    cout << "Insert operations: " << insert_ops << endl << "Extract minimum operations: " << extract_min_ops << endl;
 
     for (uint i = 0; i < result.size(); i++)
     {
-        cout << result[i];
-
-        if (i != result.size() - 1)
-        {
-            cout << " ";
-        }
+        cout << result[i] << " ";
     }
 
     cout << "\n";
 
     return 0;
 }
+
+/*
+9 14
+1 2 4 
+1 8 8
+2 3 8 
+2 8 11 
+3 4 7 
+3 9 2 
+3 6 4 
+4 5 9 
+4 6 14 
+5 6 10 
+6 7 2 
+7 8 1 
+7 9 6 
+8 9 7 
+1
+*/

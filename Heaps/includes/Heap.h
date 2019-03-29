@@ -12,6 +12,7 @@ struct Node
     Node<T> *next;
     Node<T> *child;
     Node<T> *parent;
+    Node<T> *sibling;
     T value;
     int degree;
     bool marked;
@@ -55,8 +56,7 @@ public:
     virtual void insert(T value) = 0;
     virtual T get_min() = 0;
     virtual T extract_min() = 0;
-    virtual void decrease_key(T i, T value) = 0;
-
+    
     int getNodeCount(){
 
         return node_count;
