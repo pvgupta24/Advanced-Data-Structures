@@ -12,6 +12,8 @@
 #define SYMBOL_TICK "✓"
 #define SYMBOL_CROSS "✘"
 
+#define INORDER 0
+#define PREORDER 1
 
 enum COLOUR {
     RED,
@@ -90,8 +92,9 @@ public:
     void remove_fixup(RedBlackTreeNode *z);
     RedBlackTreeNode *tree_minimum(RedBlackTreeNode *z);
     RedBlackTreeNode *tree_maximum(RedBlackTreeNode *z);
-    void print_tree();
+    void print_tree(int type);
     void preorder(RedBlackTreeNode *node);
+    void inorder(RedBlackTreeNode *node);
     int get_black_height();
     void insert_colour(RedBlackTreeNode *newNode);
 };

@@ -291,8 +291,25 @@ void RedBlackTree::preorder(RedBlackTreeNode *node){
         cout << ")";
     }
 }
-void RedBlackTree::print_tree(){
-    this->preorder(this->root);
+
+void RedBlackTree::inorder(RedBlackTreeNode *node){
+    if(node != this->nil){
+        this->inorder(node->left);
+        cout << ((node->colour == BLACK) ? FORE_BLU : FORE_RED) << node->key <<" "<< RESET;
+        this->inorder(node->right);
+    }
+}
+
+void RedBlackTree::print_tree(int type){
+    switch (type)
+    {
+        case INORDER:
+            this->inorder(this->root);
+            break;
+        case PREORDER:
+            this->preorder(this->root);
+            break;
+    }
     cout << endl;
 }
 
